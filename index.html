@@ -23,19 +23,32 @@ let model; // Variable que guardará el modelo
 
 // Función para cargar el modelo, se llama cuando se carga la página
 async function cargarModelo(){
-	window.AppInventor.setWebViewString("ANTES"); ///////////////////////////
-    model = await tmImage.load(
-        URL + "model.json",
-        URL + "metadata.json"
-    );
-	window.AppInventor.setWebViewString("DESPUES"); //////////////////////////////
-	// Descarga el modelo (await es para esperar hasta que termine de cargarse)
-	// model.json: Archivo donde está el modelo
-	// metadata.json: Archivo donde está la información del modelo
 
-    window.AppInventor.setWebViewString("MODELO_CARGADO"); // Esto sirve para enviar un mensaje desde el HTML hacia App Inventor y señalar que el modelo ya está cargado
+    try{
+
+        window.AppInventor.setWebViewString("ANTES"); // Indica que la función comenzó a ejecutarse correctamente
+
+        model = await tmImage.load(
+            URL + "model.json",
+            URL + "metadata.json"
+        );
+
+        // Descarga el modelo (await es para esperar hasta que termine de cargarse)
+        // model.json: Archivo donde está el modelo
+        // metadata.json: Archivo donde está la información del modelo
+
+        window.AppInventor.setWebViewString("MODELO_CARGADO"); // Envía un mensaje a App Inventor indicando que el modelo ya está listo
+
+    } catch(error){
+
+        // Si ocurre un error durante la carga del modelo,
+        // se envía el mensaje de error a App Inventor para facilitar la depuración
+
+        window.AppInventor.setWebViewString("ERROR: " + error.toString());
+
+    }
+
 }
-
 window.onload = cargarModelo; // Cuando se cargue la página, carga el modelo
 
 // Función para analizar la imagen
