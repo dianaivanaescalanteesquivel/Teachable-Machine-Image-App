@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script> <!-- Librería Tensorflow -->
+<script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image"></script> <!-- Librería TeachableMachine -->
+
+</head>
+
+<body>
+
+<img id="imagen" width="224" height="224" hidden> <!-- Elemento para cargar la imagen que analizará el modelo -->
+
+<script>
+
+const URL = "https://teachablemachine.withgoogle.com/models/ldjSkDJhR/"; // Modelo de Imagen en Teachable Machine
+
+let model; // Variable que guardará el modelo
+
+// Función para cargar el modelo, se llama cuando se carga la página
+async function cargarModelo(){
+
+    model = await tmImage.load(
+        URL + "model.json",
+        URL + "metadata.json"
+    );
+	
+	// Descarga el modelo (await es para esperar hasta que termine de cargarse)
+	// model.json: Archivo donde está el modelo
+	// metadata.json: Archivo donde está la información del modelo
+
+    window.AppInventor.setWebViewString("MODELO_CARGADO"); // Esto sirve para enviar un mensaje desde el HTML hacia App Inventor y señalar que el modelo ya está cargado
+}
+
+window.onload = cargarModelo; // Cuando se cargue la página, carga el modelo
+
+// Función para analizar la imagen
+async function analizarImagen(ruta){
+
+    const img = document.getElementById("imagen"); // Busca el elemento imagen y lo guarda en una variable para usarlo como referencia
+
+    img.onload = async function(){
+
+		// Espera a que cargue la imagen para ejecutar el análisis
+		
+        const prediction = await model.predict(img); // Guarda la predicción del modelo en una variable
+
+        let resultado = "";
+		
+		// Ciclo for para evaluar el valor de ambas clases, prediction.length es 2 porque hay dos clases
+        for(let i=0;i<prediction.length;i++){
+
+            resultado += prediction[i].className +
+                         "|" +
+                         (prediction[i].probability*100).toFixed(2); // Va agregando texto al resultado, por ejemplo "Perros" +  | + Probabilidad
+
+            if(i<prediction.length-1)
+                resultado += ";"; // Cuando ya no faltan clases por recorrer, se termina el resultado con punto y coma
+        }
+
+        window.AppInventor.setWebViewString(resultado); // Envía el resultado a MIT App Inventor
+
+    }
+
+	// Función por si sucede un error
+    img.onerror = function(){
+
+        window.AppInventor.setWebViewString("ERROR");
+
+    }
+
+    img.src = ruta; // Esta línea inicia todo el proceso, le dice al elemento img que cargue la imagen de esa ruta
+
+}
+
+</script>
+
+</body>
+
+</html>
