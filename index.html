@@ -24,30 +24,14 @@ let model; // Variable que guardará el modelo
 // Función para cargar el modelo, se llama cuando se carga la página
 async function cargarModelo(){
 
-    try{
+    model = await tmImage.load(
+		URL + "model.json",
+        URL + "metadata.json"
+	);
 
-        window.AppInventor.setWebViewString("ANTES"); // Indica que la función comenzó a ejecutarse correctamente
-
-        model = await tmImage.load(
-            URL + "model.json",
-            URL + "metadata.json"
-        );
-
-        // Descarga el modelo (await es para esperar hasta que termine de cargarse)
-        // model.json: Archivo donde está el modelo
-        // metadata.json: Archivo donde está la información del modelo
-
-        window.AppInventor.setWebViewString("MODELO_CARGADO"); // Envía un mensaje a App Inventor indicando que el modelo ya está listo
-
-    } catch(error){
-
-        // Si ocurre un error durante la carga del modelo,
-        // se envía el mensaje de error a App Inventor para facilitar la depuración
-
-        window.AppInventor.setWebViewString("ERROR: " + error.toString());
-
-    }
-
+    // Descarga el modelo (await es para esperar hasta que termine de cargarse)
+    // model.json: Archivo donde está el modelo
+    // metadata.json: Archivo donde está la información del modelo
 }
 window.onload = cargarModelo; // Cuando se cargue la página, carga el modelo
 
@@ -72,7 +56,7 @@ async function analizarImagen(ruta){
                          (prediction[i].probability*100).toFixed(2); // Va agregando texto al resultado, por ejemplo "Perros" +  | + Probabilidad
 
             if(i<prediction.length-1)
-                resultado += ";"; // Cuando ya no faltan clases por recorrer, se termina el resultado con punto y coma
+                resultado += ";"; // Se separan clases por punto y coma
         }
 
         window.AppInventor.setWebViewString(resultado); // Envía el resultado a MIT App Inventor
