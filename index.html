@@ -17,20 +17,18 @@
 
 <script>
 
-window.AppInventor.setWebViewString("HOLA"); /////////////////////////////////////////////////////////
-
 const URL = "https://teachablemachine.withgoogle.com/models/ldjSkDJhR/"; // Modelo de Imagen en Teachable Machine
 
 let model; // Variable que guardará el modelo
 
 // Función para cargar el modelo, se llama cuando se carga la página
 async function cargarModelo(){
-
+	window.AppInventor.setWebViewString("ANTES"); ///////////////////////////
     model = await tmImage.load(
         URL + "model.json",
         URL + "metadata.json"
     );
-	
+	window.AppInventor.setWebViewString("DESPUES"); //////////////////////////////
 	// Descarga el modelo (await es para esperar hasta que termine de cargarse)
 	// model.json: Archivo donde está el modelo
 	// metadata.json: Archivo donde está la información del modelo
