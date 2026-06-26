@@ -37,10 +37,13 @@ window.onload = cargarModelo; // Cuando se cargue la página, carga el modelo
 
 // Función para analizar la imagen
 async function analizarImagen(ruta){
-
+	alert(ruta);
+	 
     const img = document.getElementById("imagen"); // Busca el elemento imagen y lo guarda en una variable para usarlo como referencia
 
     img.onload = async function(){
+	
+		alert("Imagen cargada");
 
 		// Espera a que cargue la imagen para ejecutar el análisis
 		
