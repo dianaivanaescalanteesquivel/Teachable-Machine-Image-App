@@ -43,7 +43,7 @@ async function analizarImagen(ruta){
 
     img.onload = async function(){
 	
-		alert("Imagen cargada");
+		window.AppInventor.setWebViewString("ANALIZANDO");
 
 		// Espera a que cargue la imagen para ejecutar el análisis
 		
