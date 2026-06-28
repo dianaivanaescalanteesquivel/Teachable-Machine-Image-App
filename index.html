@@ -28,13 +28,13 @@ async function cargarModelo(){
         URL + "metadata.json"
 	);
 	window.AppInventor.setWebViewString("READY");
+	 window.AppInventor.setWebViewString("SELECCIONA UNA IMAGEN PARA ANALIZAR");
     // Descarga el modelo (await es para esperar hasta que termine de cargarse)
     // model.json: Archivo donde está el modelo
     // metadata.json: Archivo donde está la información del modelo
 }
 window.onload = cargarModelo; // Cuando se cargue la página, carga el modelo
 
-// Función para analizar la imagen
 // Función para analizar una imagen en Base64 enviada desde App Inventor
 async function analizarImagenBase64() {
 
@@ -76,6 +76,7 @@ async function analizarImagenBase64() {
 
             // Envía el resultado a App Inventor
             window.AppInventor.setWebViewString(resultado);
+			window.AppInventor.setWebViewString("CLASIFICACIÓN COMPLETADA");
 
         } catch (error) {
 
