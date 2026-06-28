@@ -38,17 +38,11 @@ window.onload = cargarModelo; // Cuando se cargue la página, carga el modelo
 // Función para analizar una imagen en Base64 enviada desde App Inventor
 async function analizarImagenBase64() {
 
-    // Verifica que el modelo ya esté cargado
-    if (!model) {
-        window.AppInventor.setWebViewString("ERROR_MODELO");
-        return;
-    }
-
     // Obtiene el Base64 enviado desde App Inventor
     let base64 = window.AppInventor.getWebViewString();
 
     if (!base64 || base64.length === 0) {
-        window.AppInventor.setWebViewString("ERROR_BASE64_VACIO");
+        window.AppInventor.setWebViewString("ERROR IMAGEN TIPO 2");
         return;
     }
 
@@ -61,7 +55,7 @@ async function analizarImagenBase64() {
 
     img.onload = async function () {
 
-        window.AppInventor.setWebViewString("IMAGEN_CARGADA");
+        window.AppInventor.setWebViewString("ANALIZANDO IMAGEN...");
 
         try {
 
@@ -86,7 +80,7 @@ async function analizarImagenBase64() {
         } catch (error) {
 
             window.AppInventor.setWebViewString(
-                "ERROR_PREDICCION:" + error.message
+                "ERROR DE MODELO:" + error.message
             );
 
         }
@@ -95,7 +89,7 @@ async function analizarImagenBase64() {
 
     img.onerror = function () {
 
-        window.AppInventor.setWebViewString("ERROR_IMAGEN");
+        window.AppInventor.setWebViewString("ERROR DE IMAGEN TIPO 1");
 
     };
 
