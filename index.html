@@ -38,8 +38,12 @@ window.onload = cargarModelo; // Cuando se cargue la página, carga el modelo
 // Función para analizar la imagen
 async function analizarImagen(ruta){
 
-    // Verifica que la función fue llamada y muestra la ruta recibida
-    window.AppInventor.setWebViewString("RUTA:" + ruta);
+    // Comienza la carga de la imagen
+	if (!ruta.startsWith("file://")) {
+    ruta = "file://" + ruta;
+	}
+
+	window.AppInventor.setWebViewString("RUTA_FINAL:" + ruta);
 
     // Verifica que el modelo ya esté cargado
     if(!model){
@@ -92,8 +96,11 @@ async function analizarImagen(ruta){
     };
 
     // Comienza la carga de la imagen
-    img.src = ruta;
+    //img.src = ruta;
 
+	fetch(ruta)
+    .then(r => window.AppInventor.setWebViewString("FETCH_OK"))
+    .catch(e => window.AppInventor.setWebViewString("FETCH_ERROR:" + e));
 }
 
 </script>
