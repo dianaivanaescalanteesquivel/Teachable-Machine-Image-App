@@ -37,43 +37,62 @@ window.onload = cargarModelo; // Cuando se cargue la página, carga el modelo
 
 // Función para analizar la imagen
 async function analizarImagen(ruta){
-	alert(ruta);
-	 
-    const img = document.getElementById("imagen"); // Busca el elemento imagen y lo guarda en una variable para usarlo como referencia
 
+    // Verifica que la función fue llamada y muestra la ruta recibida
+    window.AppInventor.setWebViewString("RUTA:" + ruta);
+
+    // Verifica que el modelo ya esté cargado
+    if(!model){
+        window.AppInventor.setWebViewString("ERROR_MODELO");
+        return;
+    }
+
+    const img = document.getElementById("imagen");
+
+    // Se ejecuta cuando la imagen termina de cargarse
     img.onload = async function(){
-	
-		window.AppInventor.setWebViewString("ANALIZANDO");
 
-		// Espera a que cargue la imagen para ejecutar el análisis
-		
-        const prediction = await model.predict(img); // Guarda la predicción del modelo en una variable
+        window.AppInventor.setWebViewString("IMAGEN_CARGADA");
 
-        let resultado = "RESULT:";
-		
-		// Ciclo for para evaluar el valor de ambas clases, prediction.length es 2 porque hay dos clases
-        for(let i=0;i<prediction.length;i++){
+        try{
 
-            resultado += prediction[i].className +
-                         "|" +
-                         (prediction[i].probability*100).toFixed(2); // Va agregando texto al resultado, por ejemplo "Perros" +  | + Probabilidad
+            const prediction = await model.predict(img);
 
-            if(i<prediction.length-1)
-                resultado += ";"; // Se separan clases por punto y coma
+            let resultado = "RESULT:";
+
+            for(let i = 0; i < prediction.length; i++){
+
+                resultado += prediction[i].className +
+                             "|" +
+                             (prediction[i].probability * 100).toFixed(2);
+
+                if(i < prediction.length - 1){
+                    resultado += ";";
+                }
+
+            }
+
+            // Envía el resultado a App Inventor
+            window.AppInventor.setWebViewString(resultado);
+
+        }
+        catch(error){
+
+            window.AppInventor.setWebViewString("ERROR_PREDICCION");
+
         }
 
-        window.AppInventor.setWebViewString(resultado); // Envía el resultado a MIT App Inventor
+    };
 
-    }
-
-	// Función por si sucede un error
+    // Se ejecuta si la imagen no pudo cargarse
     img.onerror = function(){
 
-        window.AppInventor.setWebViewString("ERROR");
+        window.AppInventor.setWebViewString("ERROR_IMAGEN");
 
-    }
+    };
 
-    img.src = ruta; // Esta línea inicia todo el proceso, le dice al elemento img que cargue la imagen de esa ruta
+    // Comienza la carga de la imagen
+    img.src = ruta;
 
 }
 
