@@ -36,43 +36,71 @@ async function cargarModelo(){
 window.onload = cargarModelo; // Cuando se cargue la página, carga el modelo
 
 // Función para analizar la imagen
-async function analizarImagenBase64(base64){
+// Función para analizar una imagen en Base64 enviada desde App Inventor
+async function analizarImagenBase64() {
 
-    if(!model){
+    // Verifica que el modelo ya esté cargado
+    if (!model) {
         window.AppInventor.setWebViewString("ERROR_MODELO");
         return;
     }
 
+    // Obtiene el Base64 enviado desde App Inventor
+    let base64 = window.AppInventor.getWebViewString();
+
+    if (!base64 || base64.length === 0) {
+        window.AppInventor.setWebViewString("ERROR_BASE64_VACIO");
+        return;
+    }
+
+    // Si la extensión NO incluye el encabezado, se agrega
+    if (!base64.startsWith("data:image")) {
+        base64 = "data:image/jpeg;base64," + base64;
+    }
+
     const img = document.getElementById("imagen");
 
-    img.onload = async function(){
+    img.onload = async function () {
 
-        try{
+        window.AppInventor.setWebViewString("IMAGEN_CARGADA");
+
+        try {
 
             const prediction = await model.predict(img);
 
             let resultado = "RESULT:";
 
-            for(let i = 0; i < prediction.length; i++){
+            for (let i = 0; i < prediction.length; i++) {
 
-                resultado += prediction[i].className + "|" +
+                resultado += prediction[i].className +
+                             "|" +
                              (prediction[i].probability * 100).toFixed(2);
 
-                if(i < prediction.length - 1){
+                if (i < prediction.length - 1) {
                     resultado += ";";
                 }
             }
 
+            // Envía el resultado a App Inventor
             window.AppInventor.setWebViewString(resultado);
 
-        }catch(error){
+        } catch (error) {
 
-            window.AppInventor.setWebViewString("ERROR_PREDICCION:" + error.message);
+            window.AppInventor.setWebViewString(
+                "ERROR_PREDICCION:" + error.message
+            );
 
         }
 
     };
 
+    img.onerror = function () {
+
+        window.AppInventor.setWebViewString("ERROR_IMAGEN");
+
+    };
+
+    // Carga la imagen desde el Base64
     img.src = base64;
 }
 
