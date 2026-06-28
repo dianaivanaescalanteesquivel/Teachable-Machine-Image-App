@@ -73,7 +73,7 @@ async function analizarImagenBase64() {
 
                 resultado += prediction[i].className +
                              "|" +
-                             (prediction[i].probability * 100).toFixed(2) + "%";
+                             (prediction[i].probability * 100).toFixed(2);
 
                 if (i < prediction.length - 1) {
                     resultado += ";";
