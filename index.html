@@ -36,16 +36,8 @@ async function cargarModelo(){
 window.onload = cargarModelo; // Cuando se cargue la página, carga el modelo
 
 // Función para analizar la imagen
-async function analizarImagen(ruta){
+async function analizarImagenBase64(base64){
 
-    // Comienza la carga de la imagen
-	if (!ruta.startsWith("file://")) {
-    ruta = "file://" + ruta;
-	}
-
-	window.AppInventor.setWebViewString("RUTA_FINAL:" + ruta);
-
-    // Verifica que el modelo ya esté cargado
     if(!model){
         window.AppInventor.setWebViewString("ERROR_MODELO");
         return;
@@ -53,10 +45,7 @@ async function analizarImagen(ruta){
 
     const img = document.getElementById("imagen");
 
-    // Se ejecuta cuando la imagen termina de cargarse
     img.onload = async function(){
-
-        window.AppInventor.setWebViewString("IMAGEN_CARGADA");
 
         try{
 
@@ -66,41 +55,25 @@ async function analizarImagen(ruta){
 
             for(let i = 0; i < prediction.length; i++){
 
-                resultado += prediction[i].className +
-                             "|" +
+                resultado += prediction[i].className + "|" +
                              (prediction[i].probability * 100).toFixed(2);
 
                 if(i < prediction.length - 1){
                     resultado += ";";
                 }
-
             }
 
-            // Envía el resultado a App Inventor
             window.AppInventor.setWebViewString(resultado);
 
-        }
-        catch(error){
+        }catch(error){
 
-            window.AppInventor.setWebViewString("ERROR_PREDICCION: " + error.message);
-			
+            window.AppInventor.setWebViewString("ERROR_PREDICCION:" + error.message);
+
         }
 
     };
 
-    // Se ejecuta si la imagen no pudo cargarse
-    img.onerror = function(){
-
-        // window.AppInventor.setWebViewString("ERROR_IMAGEN");
-
-    };
-
-    // Comienza la carga de la imagen
-    //img.src = ruta;
-
-	fetch(ruta)
-    .then(r => window.AppInventor.setWebViewString("FETCH_OK"))
-    .catch(e => window.AppInventor.setWebViewString("FETCH_ERROR:" + e));
+    img.src = base64;
 }
 
 </script>
