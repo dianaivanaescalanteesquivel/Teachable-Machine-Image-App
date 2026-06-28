@@ -28,7 +28,7 @@ async function cargarModelo(){
 		URL + "model.json",
         URL + "metadata.json"
 	);
-
+	window.AppInventor.setWebViewString("READY");
     // Descarga el modelo (await es para esperar hasta que termine de cargarse)
     // model.json: Archivo donde está el modelo
     // metadata.json: Archivo donde está la información del modelo
@@ -49,7 +49,7 @@ async function analizarImagen(ruta){
 		
         const prediction = await model.predict(img); // Guarda la predicción del modelo en una variable
 
-        let resultado = "";
+        let resultado = "RESULT:";
 		
 		// Ciclo for para evaluar el valor de ambas clases, prediction.length es 2 porque hay dos clases
         for(let i=0;i<prediction.length;i++){
