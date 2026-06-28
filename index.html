@@ -78,8 +78,8 @@ async function analizarImagen(ruta){
         }
         catch(error){
 
-            window.AppInventor.setWebViewString("ERROR_PREDICCION");
-
+            window.AppInventor.setWebViewString("ERROR_PREDICCION: " + error.message);
+			
         }
 
     };
